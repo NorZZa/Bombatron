@@ -2,10 +2,13 @@ var Player = function()
 {
 	//**TODO** - Sprite Animation
 	this.image = document.createElement("img");
-	//this.position = new Vector2();
+	this.x = canvas.width/2;
+	this.y = canvas.height/2;
+	this.width = 51;
+	this.height = 50;
 	
-	this.width = 23;
-	this.height = 36;
+	//this.position = new Vector2();
+	//this.position.set( 9*TILE, 0*TILE );
 	
 	this.velocity = new Vector2();
 	
@@ -47,6 +50,7 @@ Player.prototype.update = function(deltaTime)
 	if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true)
 	{
 		drop = true;
+		//Drop bomb, call from bomb.js
 	}
 	
 	//movement code
@@ -101,11 +105,60 @@ Player.prototype.draw = function()
 	context.save();
 	context.translate(this.x, this.y);
 	context.rotate(this.rotation);
-	context.drawImage(this.image, this.position.x/7, this.position.y);
+	context.drawImage(this.image, -this.width/2, -this.height/2);
 	context.restore();
 }
 
-
+/*/collision detection \\probs need to be tested*****************************************
+	//Variables
+	var tx = pixelToTile(this.position.x);
+	var ty = pixelToTile(this.position.y);
+	var nx = (this.position.x)%TILE;
+	var ny = (this.position.y)%TILE;
+	var cell = cellAtTileCoord(LAYER_ROCKS, tx, ty);
+	var cellright = cellAtTileCoord(LAYER_ROCKS, tx + 1, ty);
+	var cellleft = cellAtTileCoord(LAYER_ROCKS, tx - 1, ty);
+	var celldown = cellAtTileCoord(LAYER_ROCKS, tx, ty + 1);
+	var celldiag = cellAtTileCoord(LAYER_ROCKS, tx + 1, ty + 1);
+	//actual collision 
+	if(this.velocity.y > 0)
+	{
+		//Y down
+		if((celldown && !cell) || (celldiag && !cellright && nx))
+		{
+			this.position.y = tileToPixel(ty);
+			this.velocity.y = 0
+			ny = 0;
+		}
+	}
+		//Y Up
+		else if (this.velocity.y < 0)
+	{
+		if((cell && !celldown) || (cellright && !celldiag && nx))
+		{
+			this.position.y = tileToPixel(ty + 1);
+			this.velocity.y = 0;
+			ny = 0;
+		}
+	}
+		//X Right
+		if(this.velocity.x > 0)
+	{
+			if((cellright && !cell) || (celldiag && !celldown && ny))
+			{
+				this.position.x = tileToPixel(tx);
+				this.velocity.x = 0;
+			}
+	}
+		//X Left
+		else if (this.velocity.x < 0)
+	{
+		if((cell && !cellright) || (celldown && !celldiag && ny))
+		{
+			this.position.x = tileToPixel(tx + 1);
+			this.velocity.x = 0;
+		}
+	}
 
 
 

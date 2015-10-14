@@ -28,10 +28,15 @@ function getDeltaTime()
 }
 
 //-------------------- Don't modify anything above here-------------------------\\
+
+var SCREEN_WIDTH = canvas.width;
+var SCREEN_HEIGHT = canvas.height;
+
 // Object variables
-var keyboard = new Keyboard();
 var player = new Player();
+var keyboard = new Keyboard();
 // Force variables
+var TILE = 50;
 var METER = TILE;
 var GRAVITY = METER * 9.8 *6;
 var MAXDX = METER * 10;
@@ -39,6 +44,7 @@ var MAXDY = METER * 15;
 var XACCEL = MAXDX * 2;
 var YACCEL = MAXDX * 2;
 var FRICTION = MAXDX * 6;
+
 // Maps and layer Variables
 
 function cellAtPixelCoord(layer, x,y)
@@ -76,6 +82,31 @@ function bound(value, min, max)
 	if(value > max)
 		return max;
 	return value;
+}
+function run()
+{
+	context.fillStyle = "#ccc";		
+	context.fillRect(0, 0, canvas.width, canvas.height);
+	
+	var deltaTime = getDeltaTime();
+		
+	player.draw();
+	player.update(deltaTime);
+		
+	// update the frame counter 
+	fpsTime += deltaTime;
+	fpsCount++;
+	if(fpsTime >= 1)
+	{
+		fpsTime -= 1;
+		fps = fpsCount;
+		fpsCount = 0;
+	}		
+		
+	// draw the FPS
+	context.fillStyle = "#f00";
+	context.font="14px Arial";
+	context.fillText("FPS: " + fps, 5, 20, 100);
 }
 
 //-------------------- Don't modify anything below here-------------------------\\
