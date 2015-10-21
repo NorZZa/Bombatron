@@ -47,7 +47,7 @@ Player.prototype.update = function(deltaTime)
 	{
 		down = true;
 	}
-	if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true)
+	if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true&& this.cooldownTimer <= 0);
 	{
 		drop = true;
 		//Drop bomb, call from bomb.js
@@ -97,19 +97,7 @@ Player.prototype.update = function(deltaTime)
 		ddy = ddy - FRICTION
 	}
 	
-}
-
-Player.prototype.draw = function()
-{
-	//will need to update once sprite is done
-	context.save();
-	context.translate(this.x, this.y);
-	context.rotate(this.rotation);
-	context.drawImage(this.image, -this.width/2, -this.height/2);
-	context.restore();
-}
-
-/*/collision detection \\probs need to be tested*****************************************
+	//collision detection \\probs need to be tested*****************************************
 	//Variables
 	var tx = pixelToTile(this.position.x);
 	var ty = pixelToTile(this.position.y);
@@ -159,6 +147,17 @@ Player.prototype.draw = function()
 			this.velocity.x = 0;
 		}
 	}
+}
+
+Player.prototype.draw = function()
+{
+	//will need to update once sprite is done
+	context.save();
+	context.translate(this.x, this.y);
+	context.rotate(this.rotation);
+	context.drawImage(this.image, -this.width/2, -this.height/2);
+	context.restore();
+}
 
 
 
