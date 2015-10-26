@@ -1,18 +1,39 @@
+	var ANIM_DEAD = 0;
+	var ANIM_IDLE = 1;
+	var ANIM_RUN = 2;
+	var ANIM_DROP = 3;
+	var ANIM_MAX = 4;
+	
+	var bullets = [];
+
 var Player = function()
 {
-	//**TODO** - Sprite Animation
-	this.image = document.createElement("img");
-	this.x = canvas.width/2;
-	this.y = canvas.height/2;
+	this.sprite = new Sprite("player.png");
+	//ANIM_DEAD
+	this.sprite.buildAnimation(10, 4, 50, 50, 0.05,
+		[0,1 ,2, 3, 4, 5, 6, 7, 8, 9, 10]);
+	//ANIM_IDLE
+	this.sprite.buildAnimation(10, 4, 50, 50, 0.05,
+		[11, 12, 13, 14, 15, 16, 17, 18, 19, 20,]);
+	//ANIM_RUN
+	this.sprite.buildAnimation(10, 4, 50, 50, 0.05,
+		[21, 22, 23, 24, 25, 26, 27, 28]);
+	//ANIM_DROP
+	this.sprite.buildAnimation(10, 4, 50, 50, 0.05,
+		[11, 29, 12]);
+	
+	for(var i=0; i<ANIM_MAX; i++)
+	{
+		this.sprite.setAnimationOffset(i, -55, -87);
+	}
+	
 	this.width = 51;
 	this.height = 50;
 	
-	//this.position = new Vector2();
-	//this.position.set( 9*TILE, 0*TILE );
+	this.position = new Vector2();
+	this.position.set( 9*TILE, 0*TILE );
 	
 	this.velocity = new Vector2();
-	
-	this.image.src = "idle(1).png"
 }
 
 Player.prototype.update = function(deltaTime)
@@ -29,27 +50,33 @@ Player.prototype.update = function(deltaTime)
 	{
 		this.cooldownTimer -=deltaTime;
 	}
+	// Need to add Else if statement for the idle anim, maybe create a variable for when anim is active?
 	
 	//Check keypress events
 	if(keyboard.isKeyDown(keyboard.KEY_LEFT) == true)
 	{
 		left = true;
+		this.sprite.currentAnimation = ANIM_RUN
 	}
 	if(keyboard.isKeyDown(keyboard.KEY_RIGHT) == true)
 	{
 		right = true;
+		this.sprite.currentAnimation = ANIM_RUN
 	}
 	if(keyboard.isKeyDown(keyboard.KEY_UP) == true)
 	{
 		up = true;
+		this.sprite.currentAnimation = ANIM_RUN
 	}
 	if(keyboard.isKeyDown(keyboard.KEY_DOWN) == true)
 	{
 		down = true;
+		this.sprite.currentAnimation = ANIM_RUN
 	}
-	if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true&& this.cooldownTimer <= 0);
+	if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true && this.cooldownTimer <= 0);
 	{
 		drop = true;
+		this.sprite.currentAnimation = ANIM_DROP
 		var	tempBomb = new Bomb((this.position.x), this.position.y);
 		this.cooldownTimer=0.3;
 		tempBomb.position.x = player.position.x;
