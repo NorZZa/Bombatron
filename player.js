@@ -50,7 +50,11 @@ Player.prototype.update = function(deltaTime)
 	if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true&& this.cooldownTimer <= 0);
 	{
 		drop = true;
-		//Drop bomb, call from bomb.js
+		var	tempBomb = new Bomb((this.position.x), this.position.y);
+		this.cooldownTimer=0.3;
+		tempBomb.position.x = player.position.x;
+		tempBomb.position.y = player.position.y;
+		Bombs.push(tempBomb);
 	}
 	
 	//movement code
