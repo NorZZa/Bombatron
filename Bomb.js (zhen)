@@ -1,0 +1,24 @@
+this.RUN_ANIMATION_RATE = 17, // fps
+this.EXPLOSION_CELLS_HEIGHT = 62, 	// pixels
+this.EXPLOSION_DURATION = 500, 	// milliseconds
+
+this.explosionCells = [
+{ left: 1, top: 48, width: 50, height: this.EXPLOSION_CELLS_HEIGHT },
+{ left: 60, top: 48, width: 68, height: this.EXPLOSION_CELLS_HEIGHT },
+{ left: 143, top: 48, width: 68, height: this.EXPLOSION_CELLS_HEIGHT},
+{ left: 230, top: 48, width: 68, height: this.EXPLOSION_CELLS_HEIGHT},
+{ left: 305, top: 48, width: 68, height: this.EXPLOSION_CELLS_HEIGHT},
+{ left: 389, top: 48, width: 68, height: this.EXPLOSION_CELLS_HEIGHT},
+{ left: 470, top: 48, width: 68, height: this.EXPLOSION_CELLS_HEIGHT}
+],
+
+this.explosionAnimator = new spriteAnimator(
+	this.explosionCells, 		// Animation cells
+	this.EXPLOSION_DURATION, 	//Duration of the explosion
+
+	function (sprite, animator) { // callback after animation
+		sprite.exploding = false;
+
+		
+
+		}})
