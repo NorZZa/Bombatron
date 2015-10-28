@@ -34,12 +34,12 @@ var SCREEN_HEIGHT = canvas.height;
 // Maps and layer Variables
 var LAYER_COUNT = 6;
 var MAP = {tw:60, th:15};
-var TILE = 35;
-var TILESET_TILE = TILE * 2;
-var TILESET_PADDING = 2;
-var TILESET_SPACING = 2;
-var TILESET_COUNT_X = 14;
-var TILESET_COUNT_Y = 14;
+var TILE = 50;
+var TILESET_TILE = TILE;
+var TILESET_PADDING = 0;
+var TILESET_SPACING = 0;
+var TILESET_COUNT_X = 24;
+var TILESET_COUNT_Y = 24;
 var LAYER_HERO = 0;
 var LAYER_OBJECT_ENEMY = 1;
 var LAYER_ROCK = 2;
@@ -49,37 +49,44 @@ var LAYER_BACKGROUND = 5;
 var worldOffsetX = 0;
 
 var tileset = document.createElement("img");
-tileset.src = "tileset.png";
+tileset.src = "Bombatron - Tileset.png";
 
 // Object variables
 var player = new Player();
 var keyboard = new Keyboard();
+var Vector2 = new Vector2();
+var Enemy = new Enemy();
+var Keyboard = new Keyboard();
+
+// Cell
+var cells = [];
+
 // Force variables
 var TILE = 50;
 var METER = TILE;
-var GRAVITY = METER * 9.8 *6;
-var MAXDX = METER * 10;
-var MAXDY = METER * 15;
+var MAXDX = METER * 5;
+var MAXDY = METER * 5;
 var XACCEL = MAXDX * 2;
 var YACCEL = MAXDX * 2;
-var FRICTION = MAXDX * 6;
+var FRICTIONX = MAXDX * 6;
+var FRICTIONY = MAXDY * 6;
+
+//Game state Variables
+//var STATE_SPLASH = 0;
+//var STATE_GAME = 1;
+//var STATE_GAMEOVER = 2;
+//var STATE_GAMEWIN = 3;
+//var splashTimer = 300;
+//var gameState = STATE_SPLASH;
 
 function cellAtPixelCoord(layer, x,y)
 {
-	if(x<0 || x>SCREEN_WIDTH || y<0)
-		return 1;
-	if (y.SCREEN_HEIGHT)
-		return 0;
-	return cellAtTileCoord(layer, p2t(x), p2t(y));
+	
 };
 
 function cellAtTileCoord(layer, tx, ty)
 {
-	if(tx<0 || tx>=MAP.tw || ty<0)
-		return 1;
-	if(ty>=MAP.th)
-		return 0;
-	return cells[layer][ty][tx];
+	
 };
 
 function tileToPixel(tile)
@@ -125,6 +132,29 @@ function drawMap()
 	}
 }
 
+function initialize() {
+ 	for(var layerIdx = 0; layerIdx < LAYER_COUNT; layerIdx++) { //----------------------------------------------------------- initialize the collision map
+ 		cells[layerIdx] = [];
+ 		var idx = 0;
+ 		for(var y = 0; y < level1.layers[layerIdx].height; y++) {
+ 			cells[layerIdx][y] = [];
+ 			for(var x = 0; x < level1.layers[layerIdx].width; x++) {
+ 				if(level1.layers[layerIdx].data[idx] != 0) {
+ 						//----------------------------------------------------------- for each tile we find in the layer data, we need to create 4 collisions *Bily: Not anymore
+ 						//----------------------------------------------------------- (because our collision squares are 35x35 but the tile in the
+						//----------------------------------------------------------- level are 70x70)
+ 					cells[layerIdx][y][x] = 1;
+ 				}
+ 				else if(cells[layerIdx][y][x] != 1) {
+					//----------------------------------------------------------- if we haven't set this cell's value, then set it to 0 now
+ 					cells[layerIdx][y][x] = 0;
+				}
+ 				idx++;
+ 			}
+	 	}
+ 	}
+}
+
 function run()
 {
 	context.fillStyle = "#ccc";		
@@ -136,6 +166,53 @@ function run()
 	drawMap();
 	player.draw();
 }
+
+//function runSplash()
+//{
+	//if(splashTimer > 0)
+	//{
+		//splashTimer --
+	//}
+	//if(splashTimer <=300)
+	//{
+		//context.drawImage(splash.image, 1, 1)
+	//}
+	
+	//if(splashTimer <=0)
+	//{
+		//gameState = STATE_GAME;
+		//return;
+	//}
+//}
+
+//function runGameOver()
+{
+//	
+//}
+
+//function runGameWin()
+//{
+	
+//}
+
+//function run()
+//{
+	//switch(gameState)
+	//{
+		//case STATE_SPLASH:
+		//runSplash();
+		//break;
+		//case STATE_GAME:
+		//runGame();
+		//break;
+		//case STATE_GAMEOVER:
+		//runGameOver();
+		//break;
+		//case STATE_GAMEWIN:
+		//runGameWin();
+		//break;
+	//}
+//}
 
 //-------------------- Don't modify anything below here
 
