@@ -5,7 +5,7 @@
 	var ANIM_MAX = 4;
 	
 	var bullets = [];
-
+// showing Bily how it works
 var Player = function()
 {
 	this.sprite = new Sprite("player.png");
