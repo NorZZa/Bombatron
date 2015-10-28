@@ -4,8 +4,8 @@
 	var ANIM_DROP = 3;
 	var ANIM_MAX = 4;
 	
-	var bullets = [];
-// showing Bily how it works
+	var bombs = [];
+
 var Player = function()
 {
 	this.sprite = new Sprite("player.png");
@@ -27,7 +27,7 @@ var Player = function()
 		this.sprite.setAnimationOffset(i, -55, -87);
 	}
 	
-	this.width = 51;
+	this.width = 50;
 	this.height = 50;
 	
 	this.position = new Vector2();
@@ -50,7 +50,6 @@ Player.prototype.update = function(deltaTime)
 	{
 		this.cooldownTimer -=deltaTime;
 	}
-	// Need to add Else if statement for the idle anim, maybe create a variable for when anim is active?
 	
 	//Check keypress events
 	if(keyboard.isKeyDown(keyboard.KEY_LEFT) == true)
@@ -58,21 +57,41 @@ Player.prototype.update = function(deltaTime)
 		left = true;
 		this.sprite.currentAnimation = ANIM_RUN
 	}
+		else if(keyboard.isKeyDown(keyboard.KEY_LEFT) == false)
+		{
+			left = false
+			this.sprite.currentAnimation = ANIM_IDLE
+		}
 	if(keyboard.isKeyDown(keyboard.KEY_RIGHT) == true)
 	{
 		right = true;
 		this.sprite.currentAnimation = ANIM_RUN
 	}
+		else if(keyboard.isKeyDown(keyboard.KEY_RIGHT) == false)
+		{
+			right = false
+			this.sprite.currentAnimation = ANIM_IDLE
+		}
 	if(keyboard.isKeyDown(keyboard.KEY_UP) == true)
 	{
 		up = true;
 		this.sprite.currentAnimation = ANIM_RUN
 	}
+		else if(keyboard.isKeyDown(keyboard.KEY_UP) == false)
+		{
+			up = false
+			this.sprite.currentAnimation = ANIM_IDLE
+		}
 	if(keyboard.isKeyDown(keyboard.KEY_DOWN) == true)
 	{
 		down = true;
 		this.sprite.currentAnimation = ANIM_RUN
 	}
+		else if(keyboard.isKeyDown(keyboard.KEY_DOWN) == false)
+		{
+			down = false
+			this.sprite.currentAnimation = ANIM_IDLE
+		}
 	if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true && this.cooldownTimer <= 0);
 	{
 		drop = true;
@@ -128,6 +147,11 @@ Player.prototype.update = function(deltaTime)
 		ddy = ddy - FRICTION
 	}
 	
+		//calculate the new position and velocity
+	this.position.y = Math.floor(this.position.y + (deltaTime * this.velocity.y));
+	this.position.x = Math.floor(this.position.x + (deltaTime * this.velocity.x));
+	this.velocity.x = bound(this.velocity.x + (deltaTime * ddx), -MAXDX, MAXDX);
+	this.velocity.y = bound(this.velocity.y + (deltaTime * ddy), -MAXDY, MAXDY);
 	//collision detection \\probs need to be tested*****************************************
 	//Variables
 	var tx = pixelToTile(this.position.x);
@@ -182,12 +206,8 @@ Player.prototype.update = function(deltaTime)
 
 Player.prototype.draw = function()
 {
-	//will need to update once sprite is done
-	context.save();
-	context.translate(this.x, this.y);
-	context.rotate(this.rotation);
-	context.drawImage(this.image, -this.width/2, -this.height/2);
-	context.restore();
+	var screenX = this.position.x - worldOffsetX;
+	this.sprite.draw(context, screenX, this.position.y);
 }
 
 
