@@ -54,6 +54,8 @@ tileset.src = "tileset.png";
 // Object variables
 var player = new Player();
 var keyboard = new Keyboard();
+// var enemies = [];
+
 // Force variables
 var TILE = 50;
 var METER = TILE;
@@ -63,6 +65,9 @@ var MAXDY = METER * 15;
 var XACCEL = MAXDX * 2;
 var YACCEL = MAXDX * 2;
 var FRICTION = MAXDX * 6;
+
+// var musicBackground;
+// var sfxFire;
 
 function cellAtPixelCoord(layer, x,y)
 {
@@ -124,6 +129,73 @@ function drawMap()
 		}
 	}
 }
+
+// musicBackground = new Howl (
+// {
+	// urls: ["background.ogg"],
+	// loop: true, 
+	// buffer: true, 
+	// volume: 0.5
+// });
+// musicBackground.play();
+
+// sfxFire = new Howl(
+// {
+	// urls: ["explosion.wav"],
+	// buffer: true,
+	// volume: 0.5,
+	// onend: function()
+	// {
+	// isSfxPlaying = false;
+	// }
+// })
+
+// Add enemies
+// idx = 0;
+// for(var y = 0; y < level.layers[LAYER_OBJECT_ENEMY].height; y++)
+// {
+	// for(var x = 0; x < level1.layers[LAYER_OBJECT_ENEMY].width; x++)]
+	// {
+		//if(level1.layers[LAYER_OBJECT_ENEMY].data[idx] !0)
+		//{
+		//var px = tileToPixel(x);
+		//var py = tileToPixel(y);
+		//var e = new Enemy(px, py);
+		//enemies.push(e);
+		//}
+		//idx++;
+	//}
+//}
+
+// function runGame()
+//{ 
+	//Enemies
+	//for(var i=0; i<enemies.length; i++)
+	//{
+		//enemies[i].update(deltaTime);
+	//}
+	//for(var i=0; i<enemies.length; i++)
+	//{
+		//enemies[i].draw(deltaTime);
+	//}
+	
+		// Player vs Enemy collision
+	// for(var i=0; i<enemies.length; i++)
+	//{
+		//if(interects(
+				//player.position.x, player.position.y,
+				//TILE, TILE,
+				//enemies[i].position.x, enemies[i].position.y,
+				//TILE, TILE) == true)
+		//{
+			//lives --;
+			//player.position.y = 7* TILE;
+			//player.position.x = 11 * TILE;
+			//break;
+		//}
+	//}
+//}
+	
 
 function run()
 {
