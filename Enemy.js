@@ -5,17 +5,19 @@
 var Enemy = function(x, y)
 {
 	
-This.image = document.createElement("img");
-
-this.width = 60;
-this.height = 41;
+this.sprite = new Sprite("Tank3");
+// ANIM_Left
+this.sprite.buildAnimation(4, 2, 50, 34, 0.3, 
+	[0, 1, 2, 3]);
+// ANIM_RIGHT
+this.sprite.buildAnimation(4, 2, 50, 34, 0.3,
+	[4, 5, 6, 7]);
+this.sprtie.setAnimationOffset(0, -35, -40);
 
 this.position - new Vector2();
 this.position.set(x, y);
 
 this.velocity = new Vector2();
-
-this.image.src = "Tank1.png"
 
 this.moveRight = true;
 this.pause = 0;
