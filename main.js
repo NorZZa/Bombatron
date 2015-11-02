@@ -54,9 +54,6 @@ tileset.src = "tileset.png";
 // Object variables
 var player = new Player();
 var keyboard = new Keyboard();
-var cells = [];
-var enemies = [];
-var bombs = [];
 // Force variables
 var TILE = 50;
 var METER = TILE;
@@ -106,109 +103,26 @@ function bound(value, min, max)
 
 function drawMap()
 {
-	var startX = -1;
-	var maxTiles = Math.floor(SCREEN_WIDTH / TILE) + 2;
-	var tileX = pixelToTile(player.position.x);
-	var offsetX = TILE + Math.floor(player.position.x%TILE);
-	
-	startX = tileX - Math.floor(maxTiles / 2);
-	
-	if(startX < 1)
+	for(var layerIdx=0; layerIdx<LAYER_COUNT; layerIdx++)
 	{
-		startX = 0;
-		offsetX = 0;
-	}
-	if(startX > MAP.tw - maxTiles)
-	{
-		startX = MAP.tw - maxTiles + 1;
-		offsetX = TILE;
-	}
-	
-	worldOffsetX = startX * TILE + offsetX;
-
-	
-	for( var layerIdx=0; layerIdx < LAYER_COUNT; layerIdx++ )
-	{
-		for( var y = 0; y < level1.layers[layerIdx].height; y++ ) 
+		var idx = 0;
+		for( var y = 0; y < level1.layers[layerIdx].height; y++ )
 		{
-			var idx = y * level1.layers[layerIdx].width + startX;
-			for( var x = startX; x < startX + maxTiles; x++ )
+			for( var x = 0; x < level1.layers[layerIdx].width; x++ )
 			{
 			if( level1.layers[layerIdx].data[idx] != 0 )
 			{
-
 				// the tiles in the Tiled map are base 1 (meaning a value of 0 means no tile), so subtract one from the tileset id to get the
 				// correct tile
 				var tileIndex = level1.layers[layerIdx].data[idx] - 1;
 				var sx = TILESET_PADDING + (tileIndex % TILESET_COUNT_X) * (TILESET_TILE + TILESET_SPACING);
 				var sy = TILESET_PADDING + (Math.floor(tileIndex / TILESET_COUNT_Y)) * (TILESET_TILE + TILESET_SPACING);
-				context.drawImage(tileset, sx, sy, TILESET_TILE, TILESET_TILE, (x-startX)*TILE - offsetX, (y-1)*TILE, TILESET_TILE, TILESET_TILE);
+				context.drawImage(tileset, sx, sy, TILESET_TILE, TILESET_TILE, x*TILE, (y-1)*TILE, TILESET_TILE, TILESET_TILE);
 			}
 			idx++;
 			}
 		}
 	}
-}
-
-//Initialize the collision map
-//function initialize()
-//{
-//	for(var layerIdx = 0; layerIdx < LAYER_COUNT; layerIdx++)
-//	{
-//		cells[layerIdx] = [];
-//		var idx = 0;
-//		for(var y = 0; y < level1.layers[layerIdx].height; y++)
-//		{
-//			cells[layerIdx][y] = [];
-//			for(var x = 0; x < level1.layers[layerIdx].width; x++)
-//			{
-//				if(level1.layers[layerIdx].data[idx] !=0)
-//				{
-//					// for each tile we find in the layer data, we need to create 4 collisions
-//					// (because our collision squares are 35x35 but the tile in the level are 70x70)
-//					cells[layerIdx][y][x] = 1;
-//					cells[layerIdx][y-1][x] = 1;
-//					cells[layerIdx][y-1][x+1] = 1;
-//					cells[layerIdx][y][x+1] = 1;
-//				}
-//				else if(cells[layerIdx][y][x] != 1)
-//				{
-//					// if we haven't set this cell's value, then set it to 0 now
-//					cells[layerIdx][y][x] = 0;
-//				}
-//				idx++;
-//			}
-//		}
-//	}
-//	
-//	//Enemies
-//	idx = 0;
-//	for(var y = 0; y < level1.layers[LAYER_OBJECT_ENEMY].height; y++)
-//	{
-//		for(var x = 0; x < level1.layers[LAYER_OBJECT_ENEMY].width; x++)
-//		{
-//			if(level1.layers[LAYER_OBJECT_ENEMY].data[idx] != 0)
-//			{
-//				var px = tileToPixel(x);
-//				var py = tileToPixel(y);
-//				var e = new Enemy(px, py);
-//				enemies.push(e);
-//			}
-//			idx++;
-//		}
-//	}
-//}	
-
-function intersects(x1, y1, w1, h1, x2, y2, w2, h2)
-{
-        if(y2 + h2 < y1 ||
-              x2 + w2 < x1 ||
-                  x2 > x1 + w1 ||
-                  y2 > y1 + h1)
-        {
-                return false;
-        }
-        return true;
 }
 
 function run()
@@ -219,21 +133,10 @@ function run()
 	var deltaTime = getDeltaTime();
 	
 	player.update(deltaTime); // update the player before drawing the map
-	drawMap()
+	drawMap();
 	player.draw();
-	
-	//Drawing enemies
-	for(var i=0; i<enemies.length; i++)
-	{
-		enemies[i].update(deltaTime);
-	}
-	for(var i=0; i<enemies.length; i++)
-	{
-		enemies[i].draw(deltaTime);
-	}
 }
 
-//initialize();
 //-------------------- Don't modify anything below here
 
 

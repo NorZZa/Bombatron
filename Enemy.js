@@ -93,7 +93,7 @@ Enemy.prototype.update = function(deltaTime)
 	// Y-Up
 	else if (this.velocity.y < 0)
 	{
-		//if((cell && !celldown) || (cellright &&))
+		if((cell && !celldown) || (cellright &&))
 		{
 			this.position.y = tileToPixel(ty + 1);
 			this.velocity.y = 0;

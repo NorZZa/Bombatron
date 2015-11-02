@@ -27,26 +27,23 @@ var Player = function()
 		this.sprite.setAnimationOffset(i, -55, -87);
 	}
 	
+	this.width = 50;
+	this.height = 50;
+	
 	this.position = new Vector2();
 	this.position.set( 9*TILE, 0*TILE );
 	
-	this.width = 50;
-	this.height = 50;
-		
 	this.velocity = new Vector2();
 }
 
 Player.prototype.update = function(deltaTime)
 {
-	this.sprite.update(deltaTime);
-	
 	var keyboard = new Keyboard();
 	var left = false;
 	var right = false;
 	var up = false;
 	var down = false;
 	var drop = false;
-	
 	this.cooldownTimer=0;
 	
 	if(this.cooldownTimer>0)
