@@ -62,7 +62,7 @@ Player.prototype.update = function(deltaTime)
 	}
 		else if(keyboard.isKeyDown(keyboard.KEY_LEFT) == false)
 		{
-			left = false
+			left = false;
 			this.sprite.setAnimation(ANIM_RUN);
 		}
 	if(keyboard.isKeyDown(keyboard.KEY_RIGHT) == true)
@@ -72,7 +72,7 @@ Player.prototype.update = function(deltaTime)
 	}
 		else if(keyboard.isKeyDown(keyboard.KEY_RIGHT) == false)
 		{
-			right = false
+			right = false;
 			this.sprite.setAnimation(ANIM_IDLE);
 		}
 	if(keyboard.isKeyDown(keyboard.KEY_UP) == true)
@@ -82,7 +82,7 @@ Player.prototype.update = function(deltaTime)
 	}
 		else if(keyboard.isKeyDown(keyboard.KEY_UP) == false)
 		{
-			up = false
+			up = false;
 			this.sprite.setAnimation(ANIM_IDLE);
 		}
 	if(keyboard.isKeyDown(keyboard.KEY_DOWN) == true)
@@ -92,7 +92,7 @@ Player.prototype.update = function(deltaTime)
 	}
 		else if(keyboard.isKeyDown(keyboard.KEY_DOWN) == false)
 		{
-			down = false
+			down = false;
 			this.sprite.setAnimation(ANIM_IDLE);
 		}
 	if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true && this.cooldownTimer <= 0);
@@ -148,12 +148,11 @@ Player.prototype.update = function(deltaTime)
 	var nx = (this.position.x)%TILE;
 	var ny = (this.position.y)%TILE;
 	
-	//BELOW VARIABLES ARE CURRENTLY BROKEN
-	var cell = tileToPixel(LAYER_ROCK, tx, ty);
-	var cellright = tileToPixel(LAYER_ROCK, tx + 1, ty);
-	var cellleft = tileToPixel(LAYER_ROCK, tx - 1, ty);
-	var celldown = tileToPixel(LAYER_ROCK, tx, ty + 1);
-	var celldiag = tileToPixel(LAYER_ROCK, tx + 1, ty + 1);
+	var cell = cellAtTileCoord(LAYER_ROCK, tx, ty);
+	var cellright = cellAtTileCoord(LAYER_ROCK, tx + 1, ty);
+	var celldown = cellAtTileCoord(LAYER_ROCK, tx, ty + 1);
+	var celldiag = cellAtTileCoord(LAYER_ROCK, tx + 1, ty + 1)
+	
 	//actual collision 
 	if(this.velocity.y > 0)
 	{

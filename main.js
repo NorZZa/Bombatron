@@ -60,11 +60,11 @@ var METER = TILE;
 var GRAVITY = METER * 9.8 *6;
 var MAXDX = METER * 10;
 var MAXDY = METER * 15;
-var XACCEL = MAXDX * 2;
-var YACCEL = MAXDX * 2;
+var XACCEL = MAXDX * 10;
+var YACCEL = MAXDX * 10;
 var FRICTION = MAXDX * 6;
 var ENEMY_MAXDX = METER * 5;
-var ENEMY_ACCEL = ENEMY_MAXDX * 2;
+var ENEMY_ACCEL = ENEMY_MAXDX * 10;
 
 function cellAtPixelCoord(layer, x,y)
 {
@@ -144,8 +144,8 @@ function initialize()
 					// for each tile we find in the layer data, we need to create 4 collisions
 					// (because our collision squares are 35x35 but the tile in the level are 70x70)
 					cells[layerIdx][y][x] = 1;
-					cells[layerIdx][y-1][x] = 1;
-					cells[layerIdx][y-1][x+1] = 1;
+					//cells[layerIdx][y-1][x] = 1;
+					//cells[layerIdx][y-1][x+1] = 1;
 					cells[layerIdx][y][x+1] = 1;
 				}
 				else if(cells[layerIdx][y][x] != 1)

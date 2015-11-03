@@ -1,8 +1,12 @@
+	var ANIM_LEFT = 0;
+	var ANIM_RIGHT = 1;
+	var ANIM_MAX = 2;
+	
 var Enemy = function(x, y)
 {
 	
 this.sprite = new Sprite("Tank3.png");
-// ANIM_Left
+// ANIM_LEFT
 this.sprite.buildAnimation(4, 2, 50, 34, 0.3, 
 	[0, 1, 2, 3]);
 // ANIM_RIGHT
@@ -29,7 +33,7 @@ Enemy.prototype.update = function(deltaTime)
 
 	if(this.pause > 0)
 	{
-		this.pause -= dt;
+		this.pause -= deltaTime;
 	}
 	else
 	{
@@ -39,10 +43,10 @@ Enemy.prototype.update = function(deltaTime)
 		var ty = pixelToTile(this.position.y);
 		var nx = (this.position.x)%TILE;	//True if enemy overlaps right
 		var ny = (this.position.y)%TILE;	//True if enemey overlaps below
-		var cell = cellAtTileCoord(LAYER_ROCKS, tx, ty);
-		var cellright = cellAtTileCoord(LAYER_ROCKS, tx + 1, ty);
-		var celldown = cellAtTileCoord(LAYER_ROCKS, tx, ty + 1);
-		var celldiag = cellAtTileCoord(LAYER_ROCKS, tx + 1, ty + 1);
+		var cell = cellAtTileCoord(LAYER_ROCK, tx, ty);
+		var cellright = cellAtTileCoord(LAYER_ROCK, tx + 1, ty);
+		var celldown = cellAtTileCoord(LAYER_ROCK, tx, ty + 1);
+		var celldiag = cellAtTileCoord(LAYER_ROCK, tx + 1, ty + 1);
 
 		// shoot
 
