@@ -1,26 +1,24 @@
-
-
-
- 
 var Enemy = function(x, y)
 {
 	
-this.sprite = new Sprite("Tank3");
+this.sprite = new Sprite("Tank3.png");
 // ANIM_Left
 this.sprite.buildAnimation(4, 2, 50, 34, 0.3, 
 	[0, 1, 2, 3]);
 // ANIM_RIGHT
 this.sprite.buildAnimation(4, 2, 50, 34, 0.3,
 	[4, 5, 6, 7]);
-this.sprtie.setAnimationOffset(0, -35, -40);
 
-this.position - new Vector2();
-this.position.set(x, y);
+	this.position = new Vector2();
+	this.position.set( 9*TILE, 0*TILE );
+	
+	this.width = 50;
+	this.height = 50;
+		
+	this.velocity = new Vector2();
 
-this.velocity = new Vector2();
-
-this.moveRight = true;
-this.pause = 0;
+	this.moveRight = true;
+	this.pause = 0;
 };
 
  // var bullets = [];
@@ -95,7 +93,7 @@ Enemy.prototype.update = function(deltaTime)
 	// Y-Up
 	else if (this.velocity.y < 0)
 	{
-		if((cell && !celldown) || (cellright &&))
+		//if((cell && !celldown) || (cellright &&))
 		{
 			this.position.y = tileToPixel(ty + 1);
 			this.velocity.y = 0;

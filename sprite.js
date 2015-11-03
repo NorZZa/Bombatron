@@ -17,7 +17,7 @@ var Sprite = function(filename) {
 	this.currentAnimation = 0;
 	this.currentFrame = 0;
 	
-		//this will be an array of frame arrays (so each element in the
+		// this will be an array of frame arrays (so each element in the
 		// animations array will be an array of frames)
 	this.animations = [];		
 	this.offsets = [];		// offset vectors for each animation

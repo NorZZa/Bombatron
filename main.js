@@ -32,20 +32,18 @@ function getDeltaTime()
 var SCREEN_WIDTH = canvas.width;
 var SCREEN_HEIGHT = canvas.height;
 // Maps and layer Variables
-var LAYER_COUNT = 6;
-var MAP = {tw:60, th:15};
-var TILE = 35;
-var TILESET_TILE = TILE * 2;
-var TILESET_PADDING = 2;
-var TILESET_SPACING = 2;
-var TILESET_COUNT_X = 14;
-var TILESET_COUNT_Y = 14;
-var LAYER_HERO = 0;
-var LAYER_OBJECT_ENEMY = 1;
-var LAYER_ROCK = 2;
-var LAYER_BUILDINGS = 3;
-var LAYER_ROAD = 4;
-var LAYER_BACKGROUND = 5;
+var LAYER_COUNT = 4;
+var MAP = {tw:12, th:12};
+var TILE = 50;
+var TILESET_TILE = TILE;
+var TILESET_PADDING = .05;
+var TILESET_SPACING = .05;
+var TILESET_COUNT_X = 25;
+var TILESET_COUNT_Y = 25;
+var LAYER_ROCK = 0;
+var LAYER_BUILDING = 1;
+var LAYER_OBJECT_ENEMIES = 2;
+var LAYER_ROAD = 3;
 var worldOffsetX = 0;
 
 var tileset = document.createElement("img");
@@ -54,10 +52,10 @@ tileset.src = "tileset.png";
 // Object variables
 var player = new Player();
 var keyboard = new Keyboard();
-// var enemies = [];
-
+var cells = [];
+var enemies = [];
+var bombs = [];
 // Force variables
-var TILE = 50;
 var METER = TILE;
 var GRAVITY = METER * 9.8 *6;
 var MAXDX = METER * 10;
@@ -65,9 +63,8 @@ var MAXDY = METER * 15;
 var XACCEL = MAXDX * 2;
 var YACCEL = MAXDX * 2;
 var FRICTION = MAXDX * 6;
-
-// var musicBackground;
-// var sfxFire;
+var ENEMY_MAXDX = METER * 5;
+var ENEMY_ACCEL = ENEMY_MAXDX * 2;
 
 function cellAtPixelCoord(layer, x,y)
 {
@@ -122,7 +119,7 @@ function drawMap()
 				var tileIndex = level1.layers[layerIdx].data[idx] - 1;
 				var sx = TILESET_PADDING + (tileIndex % TILESET_COUNT_X) * (TILESET_TILE + TILESET_SPACING);
 				var sy = TILESET_PADDING + (Math.floor(tileIndex / TILESET_COUNT_Y)) * (TILESET_TILE + TILESET_SPACING);
-				context.drawImage(tileset, sx, sy, TILESET_TILE, TILESET_TILE, x*TILE, (y-1)*TILE, TILESET_TILE, TILESET_TILE);
+				context.drawImage(tileset, sx, sy, TILESET_TILE, TILESET_TILE, x*TILE, (y)*TILE, TILESET_TILE, TILESET_TILE);
 			}
 			idx++;
 			}
@@ -130,72 +127,65 @@ function drawMap()
 	}
 }
 
-// musicBackground = new Howl (
-// {
-	// urls: ["background.ogg"],
-	// loop: true, 
-	// buffer: true, 
-	// volume: 0.5
-// });
-// musicBackground.play();
+//Initialize the collision map
+function initialize()
+{
+	for(var layerIdx = 0; layerIdx < LAYER_COUNT; layerIdx++)
+	{
+		cells[layerIdx] = [];
+		var idx = 0;
+		for(var y = 0; y < level1.layers[layerIdx].height; y++)
+		{
+			cells[layerIdx][y] = [];
+			for(var x = 0; x < level1.layers[layerIdx].width; x++)
+			{
+				if(level1.layers[layerIdx].data[idx] !=0)
+				{
+					// for each tile we find in the layer data, we need to create 4 collisions
+					// (because our collision squares are 35x35 but the tile in the level are 70x70)
+					cells[layerIdx][y][x] = 1;
+					cells[layerIdx][y-1][x] = 1;
+					cells[layerIdx][y-1][x+1] = 1;
+					cells[layerIdx][y][x+1] = 1;
+				}
+				else if(cells[layerIdx][y][x] != 1)
+				{
+					// if we haven't set this cell's value, then set it to 0 now
+					cells[layerIdx][y][x] = 0;
+				}
+				idx++;
+			}
+		}
+//Enemies
+	idx = 0;
+	for(var y = 0; y < level1.layers[LAYER_OBJECT_ENEMIES].height; y++)
+	{
+		for(var x = 0; x < level1.layers[LAYER_OBJECT_ENEMIES].width; x++)
+		{
+			if(level1.layers[LAYER_OBJECT_ENEMIES].data[idx] != 0)
+			{
+				var px = tileToPixel(x);
+				var py = tileToPixel(y);
+				var e = new Enemy(px, py);
+				enemies.push(e);
+			}
+			idx++;
+		}
+	}
+	}
+}	
 
-// sfxFire = new Howl(
-// {
-	// urls: ["explosion.wav"],
-	// buffer: true,
-	// volume: 0.5,
-	// onend: function()
-	// {
-	// isSfxPlaying = false;
-	// }
-// })
-
-// Add enemies
-// idx = 0;
-// for(var y = 0; y < level.layers[LAYER_OBJECT_ENEMY].height; y++)
-// {
-	// for(var x = 0; x < level1.layers[LAYER_OBJECT_ENEMY].width; x++)]
-	// {
-		//if(level1.layers[LAYER_OBJECT_ENEMY].data[idx] !0)
-		//{
-		//var px = tileToPixel(x);
-		//var py = tileToPixel(y);
-		//var e = new Enemy(px, py);
-		//enemies.push(e);
-		//}
-		//idx++;
-	//}
-//}
-
-// function runGame()
-//{ 
-	//Enemies
-	//for(var i=0; i<enemies.length; i++)
-	//{
-		//enemies[i].update(deltaTime);
-	//}
-	//for(var i=0; i<enemies.length; i++)
-	//{
-		//enemies[i].draw(deltaTime);
-	//}
-	
-		// Player vs Enemy collision
-	// for(var i=0; i<enemies.length; i++)
-	//{
-		//if(interects(
-				//player.position.x, player.position.y,
-				//TILE, TILE,
-				//enemies[i].position.x, enemies[i].position.y,
-				//TILE, TILE) == true)
-		//{
-			//lives --;
-			//player.position.y = 7* TILE;
-			//player.position.x = 11 * TILE;
-			//break;
-		//}
-	//}
-//}
-	
+function intersects(x1, y1, w1, h1, x2, y2, w2, h2)
+{
+        if(y2 + h2 < y1 ||
+              x2 + w2 < x1 ||
+                  x2 > x1 + w1 ||
+                  y2 > y1 + h1)
+        {
+                return false;
+        }
+        return true;
+}
 
 function run()
 {
@@ -205,10 +195,21 @@ function run()
 	var deltaTime = getDeltaTime();
 	
 	player.update(deltaTime); // update the player before drawing the map
-	drawMap();
+	drawMap()
 	player.draw();
+	
+	//Drawing enemies
+	for(var i=0; i<enemies.length; i++)
+	{
+		enemies[i].update(deltaTime);
+	}
+	for(var i=0; i<enemies.length; i++)
+	{
+		enemies[i].draw(deltaTime);
+	}
 }
 
+initialize();
 //-------------------- Don't modify anything below here
 
 
