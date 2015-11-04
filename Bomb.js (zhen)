@@ -1,7 +1,52 @@
+var Bomb = function(x, y, moveRight)
+{
+	this.image = document.createElement("img");
+	this.image.src = "Bomb.png";
+
+	this.position = new Vector2();
+	this.position.set(x,y);
+
+	this.width =5;
+	this.height = 5;
+
+	this.velocity = new Vector2();
+
+	this.moveRight = moveRight;
+	if(this.moveRight == true)
+	{
+		this.velocity.set(-MAXDX *2, 0);
+	}
+	else
+	{
+		this.velocity.set(MAXDX *2, 0);
+	}
+};
+
+Bomb.prototype.update = function(deltaTime)
+{
+	this.position.x = Math.floor(this.position.x + (deltaTime * this.velocity.x));
+}
+Bomb.prototype.draw = function()
+{
+	var screenX = this.position.x - worldOffsetX;
+	context.save();
+	context.translate(this.x, this.y);
+	context.rotate(this.rotation);
+	context.drawImage(this.image, screenX, this.position.y);
+	context.restore();
+}
+
+// EXPLOSION animation, not sure if this is correct and kinda stuck at the end,
+// also i've forgotten how to switch from one animation to another as the bomb
+// image is separate from the explosion sprite.
+
+var EXPLOSION = 0;
+
 this.RUN_ANIMATION_RATE = 17, // fps
 this.EXPLOSION_CELLS_HEIGHT = 62, 	// pixels
 this.EXPLOSION_DURATION = 500, 	// milliseconds
-
+ 
+// not sure if this is how you would do it? 
 this.explosionCells = [
 { left: 1, top: 48, width: 50, height: this.EXPLOSION_CELLS_HEIGHT },
 { left: 60, top: 48, width: 68, height: this.EXPLOSION_CELLS_HEIGHT },
@@ -12,10 +57,7 @@ this.explosionCells = [
 { left: 470, top: 48, width: 68, height: this.EXPLOSION_CELLS_HEIGHT}
 ],
 
-
-
-// this is the other way to do it
-
+// or if this is sufficient
 this.sprite = new Sprite("Explosion.png")
 this.sprite.buildAnimation(9, 1, 68, 62, 0.05,
 	[0, 1, 2, 3, 4, 5, 6, 7, 8, 9]);
