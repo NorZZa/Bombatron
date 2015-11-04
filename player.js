@@ -1,3 +1,8 @@
+	var LEFT = 0;
+	var RIGHT = 1;
+	var UP = 3;
+	var DOWN = 4;
+
 	var ANIM_DEAD = 0;
 	var ANIM_IDLE = 1;
 	var ANIM_RUN = 2;
@@ -22,7 +27,10 @@ var Player = function()
 	this.sprite.buildAnimation(10, 4, 50, 50, 0.05,
 		[11, 29, 12]);
 	
-	//this.sprite.setAnimationOffset(50, 50);
+	for(var i=0; i<ANIM_MAX; i++)
+	{
+	this.sprite.setAnimationOffset(i, 50, 50);
+	}
 	
 	this.position = new Vector2();
 	this.position.set( 9*TILE, 0*TILE );
@@ -31,7 +39,9 @@ var Player = function()
 	this.height = 50;
 		
 	this.velocity = new Vector2();
-}
+
+	this.direction = LEFT;
+};
 
 Player.prototype.update = function(deltaTime)
 {
@@ -47,54 +57,55 @@ Player.prototype.update = function(deltaTime)
 	var down = false;
 	var drop = false;
 	
-	this.cooldownTimer=0;
 	
-	if(this.cooldownTimer>0)
-	{
-		this.cooldownTimer -=deltaTime;
-	}
 	
 	//Check keypress events
 	if(keyboard.isKeyDown(keyboard.KEY_LEFT) == true)
 	{
 		left = true;
+		this.direction = LEFT;
 		this.sprite.setAnimation(ANIM_RUN);
 	}
 		else if(keyboard.isKeyDown(keyboard.KEY_LEFT) == false)
 		{
-			left = false;
-			this.sprite.setAnimation(ANIM_RUN);
+			left = false
+			this.sprite.setAnimation(ANIM_IDLE);
 		}
 	if(keyboard.isKeyDown(keyboard.KEY_RIGHT) == true)
 	{
 		right = true;
+		this.direction = RIGHT;
 		this.sprite.setAnimation(ANIM_RUN);
 	}
 		else if(keyboard.isKeyDown(keyboard.KEY_RIGHT) == false)
 		{
-			right = false;
+			right = false
 			this.sprite.setAnimation(ANIM_IDLE);
 		}
 	if(keyboard.isKeyDown(keyboard.KEY_UP) == true)
 	{
 		up = true;
+		this.direction = UP;
 		this.sprite.setAnimation(ANIM_RUN);
 	}
 		else if(keyboard.isKeyDown(keyboard.KEY_UP) == false)
 		{
-			up = false;
+			up = false
 			this.sprite.setAnimation(ANIM_IDLE);
 		}
 	if(keyboard.isKeyDown(keyboard.KEY_DOWN) == true)
 	{
 		down = true;
+		this.direction = DOWN;
 		this.sprite.setAnimation(ANIM_RUN);
 	}
 		else if(keyboard.isKeyDown(keyboard.KEY_DOWN) == false)
 		{
-			down = false;
+			down = false
 			this.sprite.setAnimation(ANIM_IDLE);
 		}
+
+
 	if(keyboard.isKeyDown(keyboard.KEY_SPACE) == true && this.cooldownTimer <= 0);
 	{
 		drop = true;
@@ -141,6 +152,12 @@ Player.prototype.update = function(deltaTime)
 	this.position.x = Math.floor(this.position.x + (deltaTime * this.velocity.x));
 	this.velocity.x = bound(this.velocity.x + (deltaTime * ddx), -MAXDX, MAXDX);
 	this.velocity.y = bound(this.velocity.y + (deltaTime * ddy), -MAXDY, MAXDY);
+
+	if ((wasleft && (this.velocity.x > 0)) ||
+		(wasright && (this.velocity.x < 0)))
+	{
+		this.velocity.x = 0;
+	}
 	//collision detection \\probs need to be tested*****************************************
 	//Variables
 	var tx = pixelToTile(this.position.x);
@@ -148,11 +165,18 @@ Player.prototype.update = function(deltaTime)
 	var nx = (this.position.x)%TILE;
 	var ny = (this.position.y)%TILE;
 	
-	var cell = cellAtTileCoord(LAYER_ROCK, tx, ty);
-	var cellright = cellAtTileCoord(LAYER_ROCK, tx + 1, ty);
-	var celldown = cellAtTileCoord(LAYER_ROCK, tx, ty + 1);
-	var celldiag = cellAtTileCoord(LAYER_ROCK, tx + 1, ty + 1)
+	//BELOW VARIABLES ARE CURRENTLY BROKEN
+	var cell = tileToPixel(LAYER_ROCK, tx, ty);
+	var cellright = tileToPixel(LAYER_ROCK, tx + 1, ty);
+	var cellleft = tileToPixel(LAYER_ROCK, tx - 1, ty);
+	var celldown = tileToPixel(LAYER_ROCK, tx, ty + 1);
+	var celldiag = tileToPixel(LAYER_ROCK, tx + 1, ty + 1);
 	
+	var cell = tileToPixel(LAYER_BUILDING, tx, ty);
+	var cellright = tileToPixel(LAYER_BUILDING, tx + 1, ty);
+	var cellleft = tileToPixel(LAYER_BUILDING, tx - 1, ty);
+	var celldown = tileToPixel(LAYER_BUILDING, tx, ty + 1);
+	var celldiag = tileToPixel(LAYER_BUILDING, tx + 1, ty + 1);
 	//actual collision 
 	if(this.velocity.y > 0)
 	{
@@ -197,21 +221,5 @@ Player.prototype.update = function(deltaTime)
 Player.prototype.draw = function()
 {
 	var screenX = this.position.x - worldOffsetX;
-	this.sprite.draw(context, 1, this.position.y);
+	this.sprite.draw(context, screenX, this.position.y);
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
